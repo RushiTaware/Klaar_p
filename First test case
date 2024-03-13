@@ -1,0 +1,129 @@
+package Basicweb;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+public class Login {
+
+	public static void main(String[] args)throws InterruptedException  {
+		// TODO Auto-generated method stub
+		
+		ChromeDriver driver = new ChromeDriver();
+		driver.get("https://klaaradmin-trials711.orangehrmlive.com/client/#/dashboard");
+		
+		driver.findElement(By.id("txtUsername")).sendKeys("Admin");
+		//Thread.sleep(1000);
+		
+		// password
+		driver.findElement(By.id("txtPassword")).sendKeys("SyN6Ktl@O0");
+		//Thread.sleep(2000);
+		
+		//click on login button and verify that we are landing on
+		driver.findElement(By.xpath("/html/body/div/div/div[1]/div[2]/div/form/div[4]/button")).click();
+		//Thread.sleep(2000);
+		
+		
+		
+		//Navigate to the employee section 
+		//on employee management
+		driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[2]/header/nav/top-menu/div/div[1]/div[2]/top-level-menu-item[1]/div/a")).click();
+		driver.manage().window().maximize();
+		// click on add employee
+		
+		
+		 WebElement elementToHover  = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[2]/section/div[3]/ui-view/div[1]/div/div/div/div[1]/a/i"));
+	     Actions actions = new Actions(driver);
+	     
+	     actions.moveToElement(elementToHover).perform();
+	     
+	     elementToHover.click();
+	     
+	     //add first name 
+	     driver.findElement(By.id("first-name-box")).sendKeys("Rushikesh");
+	     driver.findElement(By.id("middle-name-box")).sendKeys("Rajendra");
+	     driver.findElement(By.id("last-name-box")).sendKeys("Taware");
+	    //Auto Generate Employee ID on/off
+	     driver.findElement(By.xpath("//*[@id=\"modal-holder\"]/div/div/div/div[2]/form/oxd-decorator/div/div[2]/div/div[2]/div/div/span/div[2]/label")).click();
+	     
+	     //change date
+	     driver.findElement(By.id("joinedDate"));
+	     
+	     WebElement dateInput = driver.findElement(By.id("joinedDate"));
+
+	     // Clear the existing date value (if any)
+	     dateInput.clear();
+
+	     // Input the new date value	     
+	     WebElement joinedDateField = driver.findElement(By.id("joinedDate"));
+	     LocalDate newDate = LocalDate.now().plusDays(5);
+	     joinedDateField.sendKeys(newDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+	      // Test Case 7: Choose the location as the “India Office”
+	      WebElement locationDropdown = driver.findElement(By.xpath("//select[@id='location']"));
+	      locationDropdown.sendKeys("India Office");
+
+	       // Test Case 8: Enable "Create Login Details" and add a username and password. Set the Admin Role to "Regional HR Admin."
+	       WebElement createLoginDetailsSwitch = driver.findElement(By.id("createLoginDetailsSwitch"));
+	       createLoginDetailsSwitch.click();
+	       WebElement loginUsernameField = driver.findElement(By.id("loginUsername"));
+	       WebElement loginPasswordField = driver.findElement(By.id("loginPassword"));
+	       WebElement adminRoleDropdown = driver.findElement(By.id("adminRole"));
+	       loginUsernameField.sendKeys("testUser123");
+	       loginPasswordField.sendKeys("password123");
+	       adminRoleDropdown.sendKeys("Regional HR Admin");
+	        
+	        
+	       // Test Case 9: Disable all regions and select the same region as the location. Verify that the selected region tag is added below Regions
+	       
+
+	        // Test Case 10: Enable the switch for the selected region and add the same location as before
+	        // Not applicable in this script as it's not clear how regions are managed in the application
+
+	        // Test Case 11: Click on the "Next" button and verify that you are on the personal details page
+	        WebElement nextButton = driver.findElement(By.xpath("//button[contains(text(),'Next')]"));
+	        nextButton.click();
+
+	        // Test Case 12: Skip adding personal details and click on the "Next" button
+	        driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[2]/header/nav/top-menu/div/div[2]/ui-view/div/div[1]/top-level-menu-item[3]/div/a")).click();
+
+	        // Test Case 13: Confirm that you have landed on the Employee Details page
+	        //Not applicable in this script 
+
+	        // Test Case 14: Select "Full-Time Permanent" as the employment status and add comments
+	        WebElement employmentStatusDropdown = driver.findElement(By.id("employment_status_id"));
+	        employmentStatusDropdown.click();
+	        WebElement commentsField = driver.findElement(By.id("bs-select-5-4"));
+	        commentsField.click();
+            driver.findElement(By.id("comment")).sendKeys("QA");
+	        // Test Case 15: Click on the "Next" Button and verify that you have landed on the Contact Details page
+	        //not applicable in the script because there is no next button 
+
+	        // Test Case 16: Skip adding contact details, click on the "Next" button, and verify that you have landed on the Onboarding page
+	        // Not applicable in this script
+
+	        // Test Case 17: In the dropdown, select "Onboarding - India" and Save. Verify the pop-up message upon saving
+	        WebElement onboardingDropdown = driver.findElement(By.id("onboarding"));
+	        onboardingDropdown.sendKeys("Onboarding - India");
+	        WebElement saveButton = driver.findElement(By.xpath("//button[contains(text(),'Save')]"));
+	        saveButton.click();
+	        WebElement popupMessage = driver.findElement(By.xpath("//div[@class='popup-message']"));
+	        String popupText = popupMessage.getText();
+	        System.out.println("Popup Message: " + popupText);
+
+	        // Test Case 18: Once the new user is added, verify that you have landed on the employee details page. Also, confirm that basic info, job section, username, and location fields match with the data you added while adding the user
+	        driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[2]/header/nav/top-menu/div/div[2]/ui-view/div/div[1]/top-level-menu-item[5]/div/a")).click();
+
+	        // Test Case 19: On the same page, add a user profile and verify the added profile image. The user details should display the profile picture you added
+	        // Not applicable in this script as it's not clear how profile images are managed in the application
+
+	        // Close the browser
+	        driver.quit();
+	 
+		 
+	}
+
+}
