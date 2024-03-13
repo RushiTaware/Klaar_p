@@ -1,0 +1,90 @@
+package Basicweb;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+public class Testcase2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ChromeDriver driver = new ChromeDriver();
+		
+		
+		driver.get("https://klaaradmin-trials711.orangehrmlive.com/client/#/dashboard");
+		
+		driver.findElement(By.id("txtUsername")).sendKeys("Admin");
+		//Thread.sleep(1000);
+		
+		// password
+		driver.findElement(By.id("txtPassword")).sendKeys("SyN6Ktl@O0");
+		
+		//click on login button
+		driver.findElement(By.xpath("/html/body/div/div/div[1]/div[2]/div/form/div[4]/button")).click();
+		
+		 // Maximize the browser window
+        driver.manage().window().maximize();
+		
+       //click on login button and verify that we are landing on
+		driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[1]/div[4]/div/div/div/ul/li[14]/a[1]")).click();
+		
+
+      
+
+        // Test Case 1: Navigate to the Performance module
+        driver.findElement(By.className("menu_performance_viewAllAppraisals")).click();
+
+        // Test Case 2: Select "Goals" -> "My Goals."
+        WebElement goalsMenu = driver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[2]/header/nav/top-menu/div/div[1]/div[2]/top-level-menu-item[4]/div/a"));
+        goalsMenu.click();
+        
+        WebElement myGoalsOption = driver.findElement(By.xpath("//*[@id=\"top_level_menu_item_menu_item_237\"]/sub-menu-container/div/div[2]/a"));
+        myGoalsOption.click();
+
+        // Test Case 3: Click on the "Create Goal" button and verify that you have landed on the page to create a goal
+        WebElement createGoalButton = driver.findElement(By.xpath("//*[@id=\"goalListContainer\"]/div/div/list/div/div[1]/button/span"));
+        createGoalButton.click();
+        WebDriverWait wait = new WebDriverWait(driver, null);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div[1]/div/div[2]/section/div[3]/ui-view/ui-view/div/div")));
+
+        // Test Case 4: Fill in all required fields to create a goal
+        WebElement goalNameField = driver.findElement(By.id("name_value"));
+        String goalName = "Test Goal " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        goalNameField.sendKeys(goalName);
+
+        // Test Case 5: In the editor, insert an image
+        WebElement editor = driver.findElement(By.className("mce-ico mce-i-mce-ico mce-i-settings"));
+        editor.sendKeys(new File("https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PxG_GVE_Blog_Header-bike_1.width-1300.png").getAbsolutePath()); 
+
+        // Test Case 6: Set the priority of the goal to "High", and the weight should be set to "20"
+        driver.findElement(By.id("goalPriority")).click();
+        driver.findElement(By.xpath("//*[@id=\"bs-select-2-2\"]/span")).click();
+        
+        WebElement weightField = driver.findElement(By.id("spinnerInputweight"));
+        weightField.sendKeys("20");  // this test is failed as valid value is between 0-10 as code is not executed.
+
+        // Test Case 7: Once the goal is saved, verify the Goal Details
+        WebElement saveButton = driver.findElement(By.xpath("//*[@id=\"addGoalContainer\"]/div/div[2]/form/div/div/oxd-decorator[4]/div/div[2]/button/span)]"));
+        saveButton.click();
+        WebElement goalDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='goal-details']")));
+        String goalDetailsText = goalDetails.getText();
+        if (goalDetailsText.contains(goalName) && goalDetailsText.contains("High") && goalDetailsText.contains("20")) {
+            System.out.println("Goal details match the data entered while creating the goal.");
+        } else {
+            System.out.println("Goal details do not match the expected data.");
+        }
+
+        // Close the browser
+        driver.quit();
+	    
+
+		
+	}
+
+}
